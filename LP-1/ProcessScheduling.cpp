@@ -10,7 +10,7 @@ struct Process{
     int wt;
 };
 void display(vector <Process>&p){
-    cout << "ProcessId\tArrivalTime\tBurstTime\tCompletionTime\tTAT\tWT\n";
+    cout << "ProcessId\tArrivalTime\tBurstTime\tCompletionTime\tTAT\t\tWT\n";
     for (Process&proc : p){
         cout << proc.id << "\t\t" << proc.at << "\t\t" << proc.bt << "\t\t" << proc.ct << "\t\t" << proc.tat << "\t\t" << proc.wt << endl;
     }
@@ -135,6 +135,48 @@ void PRI(vector <Process>&p3){
     display(answer);
     return ;
 }
+
+void RR(vector <Process>&p5 , int quantum){
+    queue<int> readyQ;
+    int currentTime = 0;
+    int curr;
+    int completedProcess = 0;
+    int n = p5.size();
+    vector <int> restoreBurstTime(n);
+    for (int i = 0; i < n; i++){
+        restoreBurstTime[i] = p5[i].bt;
+    }
+    for (int i = 0; i < n ; i++){
+        if (p5[i].at <= currentTime){
+            readyQ.push(i);
+        }
+    }
+    while (completedProcess != n){
+        curr = readyQ.front();
+        readyQ.pop();
+        int counter = 0;
+        while (counter != quantum && counter != restoreBurstTime[curr]){
+            currentTime++;
+            counter++;
+            for (int i = 0 ; i < n ; i++){
+                if (p5[i].at == currentTime){
+                    readyQ.push(i);
+                }
+            }
+        }
+        restoreBurstTime[curr] -= counter;
+        if (restoreBurstTime[curr] == 0){
+            p5[curr].ct = currentTime;
+            p5[curr].tat = p5[curr].ct - p5[curr].at;
+            p5[curr].wt = p5[curr].tat - p5[curr].bt;
+            completedProcess++;
+        }
+        else{
+            readyQ.push(curr);
+        }
+    }
+    display(p5);
+}
 int main(){
     int n;
     cout << "Enter Number of Processes : "; cin >> n;
@@ -152,9 +194,18 @@ int main(){
     vector <Process>p2 = p;
     SJF(p2);
     for (int i = 0 ;i < n ;i++){
-        cout << "Enter Prioroty for the Process : " << i+1 << " : ";cin >> p[i].priority;
+        cout << "Enter Priority for the Process : " << i+1 << " : ";cin >> p[i].priority;
     }
     vector <Process>p3 = p;
     PRI(p3);
+
+    vector <Process> p4 = p;
+    SJF2(p4);
+
+    vector<Process> p5 = p;
+
+    int quantum;
+    cout << "Enter Quantum : "; cin >> quantum;
+    RR(p5 , quantum);
     return 0;
 }
