@@ -31,6 +31,7 @@ void FCFS(vector <Process>&p1){
     display(p1);
     return ;
 }
+//Non-Preemptive
 void SJF(vector <Process>&p2){
     int currentTime = 0;
     vector <Process> answer;
@@ -56,6 +57,49 @@ void SJF(vector <Process>&p2){
             proc.wt = proc.tat - proc.bt;
             answer.push_back(proc);
             p2.erase(p2.begin() + index);
+        }
+    }
+    display(answer);
+    return ;
+}
+//Preemptive
+void SJF2(vector<Process>&p4){
+    int currentTime = 0;
+    int n = p4.size();
+    vector <Process> answer;
+    vector <int> restoreBurstTime(n , 0);
+    for (int i = 0 ; i < n; i++){
+        restoreBurstTime[i] = p4[i].bt;
+    }
+    while (!p4.empty()){
+        int index = -1;
+        int minBurstTime = 1e9;
+        for (int i = 0; i < p4.size(); i++){
+            if (p4[i].at <= currentTime && p4[i].bt < minBurstTime && p4[i].bt > 0){
+                index = i;
+                minBurstTime = p4[i].bt;
+            }
+        }
+        if (index == -1){
+            currentTime++;
+        }
+        else{
+            p4[index].bt -= 1;
+            currentTime += 1;
+            minBurstTime = p4[index].bt;
+            if (p4[index].bt == 0){
+                minBurstTime = INT_MAX;
+                p4[index].ct = currentTime;
+                p4[index].tat = p4[index].ct - p4[index].at;
+                p4[index].wt = p4[index].tat - restoreBurstTime[p4[index].id-1];
+                if (p4[index].wt < 0){
+                    p4[index].wt = 0;
+                }
+                p4[index].bt = restoreBurstTime[p4[index].id-1];
+                Process &proc = p4[index];
+                answer.push_back(proc);
+                p4.erase(p4.begin() + index);
+            } 
         }
     }
     display(answer);
