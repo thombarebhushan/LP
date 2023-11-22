@@ -1,0 +1,2 @@
+101	E	AREG
+102	O	DREG
