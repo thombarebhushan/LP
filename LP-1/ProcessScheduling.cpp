@@ -105,7 +105,7 @@ void SJF2(vector<Process>&p4){
     display(answer);
     return ;
 }
-void PRI(vector <Process>&p3){
+void PRIORITY(vector <Process>&p3){
     int currentTime = 0;
     vector <Process> answer;
     while(!p3.empty()){
@@ -197,7 +197,7 @@ int main(){
         cout << "Enter Priority for the Process : " << i+1 << " : ";cin >> p[i].priority;
     }
     vector <Process>p3 = p;
-    PRI(p3);
+    PRIORITY(p3);
 
     vector <Process> p4 = p;
     SJF2(p4);
