@@ -8,7 +8,7 @@ void displayStatus(){
     cout << "Processes : ";
     for (int i = 1 ; i <= n ; i++){
         cout << i << " ";
-    }
+    } 
     cout << endl;
     cout << "Status    : ";
     for (int i = 1 ; i <= n ; i++){
